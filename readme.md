@@ -24,8 +24,8 @@ In theory, this version and above is ok.
 - `Qplay [bvid]`: for play a video audio.
 - `Qstop`: stop the playing audio and left the voice channel.
 - `Qjoin`: join the voice channel where you are.
-- `Qhello`: repeat `Hello Dicord Bot!`
-- `Q你好`: repeat `I don't speak chinese.`
+- `Qhello`: reply `Hello Dicord Bot!`
+- `Q你好`: reply `I don't speak chinese.`
 
 ## TODO:
  1. queue, play list
