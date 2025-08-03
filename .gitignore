@@ -1,0 +1,4 @@
+*.pyc
+logs
+b.txt
+token.txt
