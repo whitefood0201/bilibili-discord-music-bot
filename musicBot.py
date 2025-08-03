@@ -59,8 +59,8 @@ class Music(commands.Cog):
                 return await ctx.send('Video not found, please check the bvid!')
             
             self.player = discord.PCMVolumeTransformer(discord.FFmpegPCMAudio(url))
-            
-            await ctx.send("playing {bvid}")
+
+            await ctx.send(f"playing {bvid}")
             return ctx.voice_client.play(self.player)
         except Exception as e:
             print(e)
