@@ -9,6 +9,7 @@ A Discord Bot for playing bilibili video.
 - `Qstop`: Stop the playing audio and left the voice channel.
 - `Qhello`: Reply `Hello Dicord Bot!`
 - `Q你好`: Reply `I don't speak chinese.`
+- `Qgithub`: Reply the github repository of this bot.
 
 ## How to install
 
