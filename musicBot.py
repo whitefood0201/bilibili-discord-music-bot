@@ -2,8 +2,6 @@ import logger
 import discord
 from discord.ext import commands
 import asyncio
-import discord.ext
-import discord.ext.commands 
 import api.bilibiliApi as bApi
 import json
 
@@ -21,6 +19,11 @@ class Music(commands.Cog):
         await ctx.send("I don't speak chinese.")
 
     @commands.command()
+    async def github(self, ctx):
+        """ Reply the github repository of this bot """
+        await ctx.send("See: https://github.com/whitefood0201/bilibili-discord-music-bot")
+
+    @commands.command()
     async def join(self, ctx):
         """Joins a voice channel"""
         if ctx.author.voice == None:
@@ -32,16 +35,18 @@ class Music(commands.Cog):
         await channel.connect()
 
     @commands.command()
-    async def stop(self, ctx: discord.ext.commands.context.Context):
+    async def stop(self, ctx: commands.context.Context):
         """Stops and disconnects the bot from voice"""
 
         # clear the last audio data, if it exists
         if self.player:
             self.player.cleanup()
+        
+        await ctx.send("Bye~")
         await ctx.voice_client.disconnect()
 
     @commands.command()
-    async def play(self, ctx: discord.ext.commands.context.Context, bvid):
+    async def play(self, ctx: commands.context.Context, bvid):
         if bvid == None:
             return await ctx.send('You have to pass a bvid!')
 
