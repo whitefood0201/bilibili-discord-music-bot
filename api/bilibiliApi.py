@@ -10,7 +10,7 @@ VIDEO_INFO_URL = "https://api.bilibili.com/x/web-interface/view"
 VIDEO_STREAM_URL = 'https://api.bilibili.com/x/player/playurl'
 
 def getCid(bvid: str) -> int:
-    logger.info(f"Getting the cid url of {bvid}.")
+    logger.info(f"Getting the cid of {bvid}.")
     """
         Get the cid of video, using bvid.
 

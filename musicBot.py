@@ -60,6 +60,7 @@ class Music(commands.Cog):
             
             self.player = discord.PCMVolumeTransformer(discord.FFmpegPCMAudio(url))
             
+            await ctx.send("playing {bvid}")
             return ctx.voice_client.play(self.player)
         except Exception as e:
             print(e)
