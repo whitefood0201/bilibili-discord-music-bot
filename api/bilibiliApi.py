@@ -9,7 +9,7 @@ HEADER = {
 VIDEO_INFO_URL = "https://api.bilibili.com/x/web-interface/view"
 VIDEO_STREAM_URL = 'https://api.bilibili.com/x/player/playurl'
 
-def getCid(bvid: str) -> int:
+def getVideoData(bvid: str) -> dict:
     logger.info(f"Getting the cid of {bvid}.")
     """
         Get the cid of video, using bvid.
@@ -24,12 +24,16 @@ def getCid(bvid: str) -> int:
         if (resp.status_code == 200):
             data = resp.json()
             if data["code"] == 0:
-                return data["data"]["cid"]
+                return {
+                    "cid": data["data"]["cid"],
+                    "title": data["data"]["title"],
+                    "bvid": bvid
+                }
             
     except RequestsConnectionError as e:
         logger.error(e)
-        print(e)
-    return -1
+        e.with_traceback()
+    return None
 
 
 def getAudioBaseUrl(bvid: str, cid: str) -> str:
@@ -58,14 +62,14 @@ def getAudioBaseUrl(bvid: str, cid: str) -> str:
                 
     except RequestsConnectionError as e:
         logger.error(e)
-        print(e)
+        e.with_traceback()
     return ""
 
 
 def getAudio(bvid: str) -> str:
-    cid = getCid(bvid)
-    if cid != -1:
-        return getAudioBaseUrl(bvid, cid)
+    data = getVideoData(bvid)
+    if data.cid != -1:
+        return getAudioBaseUrl(bvid, data.cid)
     return ""
 
 # a = getAudio("BV1rp4y1e745")
