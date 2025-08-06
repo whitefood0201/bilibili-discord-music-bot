@@ -104,7 +104,6 @@ class Music(commands.Cog):
     async def playAudio(self, ctx, data):
         """ play a audio """
         url = bApi.getAudioBaseUrl(data["bvid"], data["cid"])
-        self.player = discord.PCMVolumeTransformer(discord.FFmpegPCMAudio(url))
         
         async def after(e):
             if e != None:
@@ -114,8 +113,13 @@ class Music(commands.Cog):
                 self.queue.pop(0)
                 await self.next(ctx)
         
-        await ctx.send(f'playing `{data["bvid"]}: {data["title"]}`')
-        ctx.voice_client.play(self.player, after= lambda e: self.bot.loop.create_task(after(e)))
+        try:
+            await ctx.send(f'playing `{data["bvid"]}: {data["title"]}`')
+            self.player = discord.PCMVolumeTransformer(discord.FFmpegPCMAudio(url))
+            ctx.voice_client.play(self.player, after= lambda e: self.bot.loop.create_task(after(e)))
+        except Exception as e:
+            e.with_traceback()
+            await ctx.send(str(e))
 
 
 class MusicManager(commands.Cog):
