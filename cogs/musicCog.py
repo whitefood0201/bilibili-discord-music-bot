@@ -62,7 +62,7 @@ class Music(commands.Cog):
             if isEmpty(self.queue) and self.player == None: # playlist is empty and not playing
                 await self.playAudio(ctx, data)
             else: # is playing => add to the queue
-                await ctx.send(f"Added `{data["bvid"]}: {data["title"]}` to the playlist~")
+                await ctx.send(f'Added `{data["bvid"]}: {data["title"]}` to the playlist~')
             
             self.queue.append(data)
             return
@@ -76,9 +76,9 @@ class Music(commands.Cog):
         if isEmpty(self.queue):
             return await ctx.send('```Empty Playlist```')
 
-        msg = f"```\nPlayList: size[{len(self.queue)}]: \n"
+        msg = f'```\nPlayList: size[{len(self.queue)}]: \n'
         for i, d in enumerate(self.queue):
-            msg += f" - {d["bvid"]}: {d["title"]} {" <-- Playing" if i==0 else ""}\n"
+            msg += f' - {d["bvid"]}: {d["title"]} {" <-- Playing" if i==0 else ""}\n'
         msg += "```"
         await ctx.send(msg)
     
@@ -108,13 +108,13 @@ class Music(commands.Cog):
         
         async def after(e):
             if e != None:
-                await ctx.send(f"Error when playing `{data["bvid"]}: {data["title"]}`, skipped!")
+                await ctx.send(f'Error when playing `{data["bvid"]}: {data["title"]}`, skipped!')
             if ctx.voice_client != None:
                 self.player = None
                 self.queue.pop(0)
                 await self.next(ctx)
         
-        await ctx.send(f"playing `{data["bvid"]}: {data["title"]}`")
+        await ctx.send(f'playing `{data["bvid"]}: {data["title"]}`')
         ctx.voice_client.play(self.player, after= lambda e: self.bot.loop.create_task(after(e)))
 
 
