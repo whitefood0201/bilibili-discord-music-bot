@@ -103,7 +103,8 @@ class Music(commands.Cog):
     async def playLast(self, ctx):
         data = self.lastVidoData
         if data == None:
-            await ctx.send("I don't remember the last video ＞︿＜")
+            return await ctx.send("I don't remember the last video ＞︿＜")
+        await ctx.send("Let's play the last video~")
         self.queue.append(data)
         await self.playAudio(ctx, data)
 
