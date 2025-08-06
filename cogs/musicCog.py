@@ -9,6 +9,7 @@ def isEmpty(l: list):
 class Music(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
+        self.lastVidoData = None
         self.player = None
         self.stoped = False
         self.queue = []
@@ -17,6 +18,7 @@ class Music(commands.Cog):
         # clear the music status
         self.queue = []
         self.player = None
+        self.lastVidoData = None
 
     async def stop(self, ctx):
         self.stoped = True
@@ -94,11 +96,14 @@ class Music(commands.Cog):
         if self.stoped:
             return
         if isEmpty(self.queue):
-            await ctx.send("Get to the end of Playlist~")
-            if ctx.voice_client != None:
-                await ctx.voice_client.disconnect()
-            return
+            return await ctx.send("Get to the end of Playlist~")
         data = self.queue[0]
+        await self.playAudio(ctx, data)
+
+    async def playLast(self, ctx):
+        data = self.lastVidoData
+        if data == None:
+            await ctx.send("I don't remember the last video ＞︿＜")
         await self.playAudio(ctx, data)
     
     async def playAudio(self, ctx, data):
@@ -117,6 +122,7 @@ class Music(commands.Cog):
             await ctx.send(f'playing `{data["bvid"]}: {data["title"]}`')
             self.player = discord.PCMVolumeTransformer(discord.FFmpegPCMAudio(url))
             ctx.voice_client.play(self.player, after= lambda e: self.bot.loop.create_task(after(e)))
+            self.lastVidoData = data
         except Exception as e:
             e.with_traceback()
             await ctx.send(str(e))
@@ -161,8 +167,15 @@ class MusicManager(commands.Cog):
         """ Skip the playing audio """
         music = self.getMusicInstance(ctx.guild.id)
         await music.skip(ctx)
+    
+    @commands.command()
+    async def again(self, ctx):
+        """ play the last video """
+        music = self.getMusicInstance(ctx.guild.id)
+        await music.playLast(ctx)
 
     @play.before_invoke
+    @again.before_invoke
     async def ensureConnected(self, ctx):
         if ctx.voice_client == None:
             music = self.getMusicInstance(ctx.guild.id)
