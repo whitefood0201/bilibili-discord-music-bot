@@ -78,7 +78,7 @@ class Music(commands.Cog):
 
         msg = f'```\nPlayList: size[{len(self.queue)}]: \n'
         for i, d in enumerate(self.queue):
-            msg += f' - {d["bvid"]}: {d["title"]} {" <-- Playing" if i==0 else ""}\n'
+            msg += f' {i+1}. {d["bvid"]}: {d["title"]} {" <-- Playing" if i==0 else ""}\n'
         msg += "```"
         await ctx.send(msg)
     
