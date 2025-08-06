@@ -10,6 +10,7 @@ class Music(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.player = None
+        self.stoped = False
         self.queue = []
     
     def clear(self):
@@ -18,6 +19,7 @@ class Music(commands.Cog):
         self.player = None
 
     async def stop(self, ctx):
+        self.stoped = True
         if ctx.voice_client != None:
             ctx.voice_client.stop()
             await ctx.voice_client.disconnect()
@@ -45,6 +47,7 @@ class Music(commands.Cog):
                 return
             await asyncio.sleep(0.1)
             t+=1
+        self.stoped = False
     
     async def play(self, ctx, bvid):
         """ Play a audio or add it to the end of playlist """
@@ -88,9 +91,12 @@ class Music(commands.Cog):
             await self.next(ctx)
     
     async def next(self, ctx):
+        if self.stoped:
+            return
         if isEmpty(self.queue):
             await ctx.send("Get to the end of Playlist~")
-            await ctx.voice_client.disconnect()
+            if ctx.voice_client != None:
+                await ctx.voice_client.disconnect()
             return
         data = self.queue[0]
         await self.playAudio(ctx, data)
@@ -103,11 +109,10 @@ class Music(commands.Cog):
         async def after(e):
             if e != None:
                 await ctx.send(f"Error when playing `{data["bvid"]}: {data["title"]}`, skipped!")
-            if ctx.voice_client == None:
-                return
-            self.player = None
-            self.queue.pop(0)
-            await self.next(ctx)
+            if ctx.voice_client != None:
+                self.player = None
+                self.queue.pop(0)
+                await self.next(ctx)
         
         await ctx.send(f"playing `{data["bvid"]}: {data["title"]}`")
         ctx.voice_client.play(self.player, after= lambda e: self.bot.loop.create_task(after(e)))
@@ -132,7 +137,6 @@ class MusicManager(commands.Cog):
     @commands.command(name="bye")
     async def stop(self, ctx: commands.context.Context):
         """Stops and disconnects the bot from voice"""
-        # clear the last audio data, if it exists
         music = self.getMusicInstance(ctx.guild.id)
         await music.stop(ctx)
 
@@ -157,8 +161,10 @@ class MusicManager(commands.Cog):
     @play.before_invoke
     async def ensureConnected(self, ctx):
         if ctx.voice_client == None:
-            await ctx.send("I'm not connect to a voice~")
-            raise commands.CommandError("Not Connected")
+            music = self.getMusicInstance(ctx.guild.id)
+            await music.join(ctx)
+            # await ctx.send("I'm not connect to a voice~")
+            # raise commands.CommandError("Not Connected")
 
     @skip.before_invoke
     async def ensurePlaying(self, ctx):
