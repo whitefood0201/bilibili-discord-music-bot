@@ -60,7 +60,7 @@ def getAudioBaseUrl(bvid: str, cid: str) -> str:
                 if len(audios) != 0:
                     return audios[0]["baseUrl"]
                 
-    except RequestsConnectionError as e:
+    except Exception as e:
         logger.error(e)
         e.with_traceback()
     return ""
