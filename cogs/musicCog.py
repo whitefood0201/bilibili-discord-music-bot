@@ -104,8 +104,9 @@ class Music(commands.Cog):
         data = self.lastVidoData
         if data == None:
             await ctx.send("I don't remember the last video ＞︿＜")
+        self.queue.append(data)
         await self.playAudio(ctx, data)
-    
+
     async def playAudio(self, ctx, data):
         """ play a audio """
         url = bApi.getAudioBaseUrl(data["bvid"], data["cid"])
