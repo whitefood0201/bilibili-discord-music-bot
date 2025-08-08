@@ -51,14 +51,16 @@ class Music(commands.Cog):
             t+=1
         self.stoped = False
     
-    async def play(self, ctx, bvid):
+    async def play(self, ctx, url):
         """ Play a audio or add it to the end of playlist """
-        if bvid == None:
+        if url == None:
             return await ctx.send('You have to pass a bvid!')
 
-        data = bApi.getVideoData(bvid)
+        data = bApi.getVideoData(url)
         if data == None:
             return await ctx.send('Video not found, please check the bvid!')
+        if data["time"] >= 30*60:
+            return await ctx.send(f'Video too large: {data["time"]//60} min > 30 min')
         
         try:
             if isEmpty(self.queue) and self.player == None: # playlist is empty and not playing

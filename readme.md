@@ -5,7 +5,7 @@ A Discord Bot for playing bilibili video.
 ## How to Use [Commands]
 
 - `Qjoin`: Join the voice channel where you are.
-- `Qplay [bvid]`: Play a video, using the BV number.
+- `Qplay [url]`: Play a video, using the BV number.
 - `Qbye`: Stop the playing audio and left the voice channel.
 - `Qskip`: Skip the playing video.
 - `Qqueue`: Show the playlist.
@@ -32,5 +32,5 @@ The development environment is:
 In theory, this version and above is ok.
 
 ## TODO:
- 1. queue, play list
+ 1. video real url Retry
  2. video list, (分p)
